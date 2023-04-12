@@ -1,12 +1,5 @@
-#!/usr/bin/env bash
-# Copyright (C) 2017-present Arctic Ice Studio <development@arcticicestudio.com>
-# Copyright (C) 2017-present Sven Greb <development@svengreb.de>
-
-# Project:    Nord tmux
-# Repository: https://github.com/arcticicestudio/nord-tmux
-# License:    MIT
-# References:
-#   https://tmux.github.io
+# Copyright (c) 2016-present Sven Greb <development@svengreb.de>
+# This source code is licensed under the MIT license found in the license file.
 
 NORD_TMUX_COLOR_THEME_FILE=src/nord.conf
 NORD_TMUX_VERSION=0.3.0
@@ -15,7 +8,7 @@ NORD_TMUX_STATUS_CONTENT_NO_PATCHED_FONT_FILE="src/nord-status-content-no-patche
 NORD_TMUX_STATUS_CONTENT_OPTION="@nord_tmux_show_status_content"
 NORD_TMUX_STATUS_CONTENT_DATE_FORMAT="@nord_tmux_date_format"
 NORD_TMUX_NO_PATCHED_FONT_OPTION="@nord_tmux_no_patched_font"
-_current_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+_current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 __cleanup() {
   unset -v NORD_TMUX_COLOR_THEME_FILE NORD_TMUX_VERSION
