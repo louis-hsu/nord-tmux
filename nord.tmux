@@ -7,6 +7,7 @@ NORD_TMUX_STATUS_CONTENT_FILE="src/nord-status-content.conf"
 NORD_TMUX_STATUS_CONTENT_NO_PATCHED_FONT_FILE="src/nord-status-content-no-patched-font.conf"
 NORD_TMUX_STATUS_CONTENT_OPTION="@nord_tmux_show_status_content"
 NORD_TMUX_STATUS_CONTENT_DATE_FORMAT="@nord_tmux_date_format"
+NORD_TMUX_STATUS_EXTRA_LINE_OPTION="@nord_tmux_status_extra_line"
 NORD_TMUX_NO_PATCHED_FONT_OPTION="@nord_tmux_no_patched_font"
 _current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -14,7 +15,7 @@ __cleanup() {
   unset -v NORD_TMUX_COLOR_THEME_FILE NORD_TMUX_VERSION
   unset -v NORD_TMUX_STATUS_CONTENT_FILE NORD_TMUX_STATUS_CONTENT_NO_PATCHED_FONT_FILE
   unset -v NORD_TMUX_STATUS_CONTENT_OPTION NORD_TMUX_NO_PATCHED_FONT_OPTION
-  unset -v NORD_TMUX_STATUS_CONTENT_DATE_FORMAT
+  unset -v NORD_TMUX_STATUS_CONTENT_DATE_FORMAT NORD_TMUX_STATUS_EXTRA_LINE_OPTION
   unset -v _current_dir
   unset -f __load __cleanup
   tmux set-environment -gu NORD_TMUX_STATUS_TIME_FORMAT
@@ -46,6 +47,20 @@ __load() {
     else
       tmux source-file "$_current_dir/$NORD_TMUX_STATUS_CONTENT_NO_PATCHED_FONT_FILE"
     fi
+  fi
+
+  local extra_line=$(tmux show-option -gqv "$NORD_TMUX_STATUS_EXTRA_LINE_OPTION")
+  if [ "$extra_line" == "1" ]; then
+    tmux set-option -g status 2
+    tmux set-hook -g after-command 'refresh-client -S'
+
+    local separator=""
+    if [ "$no_patched_font" == "1" ]; then
+      separator="|"
+    fi
+
+    tmux set-option -g "status-format[1]" "#[align=left]#{T:status-left}#[list=on align=#{status-justify}]#{W:#[range=window|#{window_index} #{E:window-status-style}]#{T:window-status-format}#[norange default]#{?loop_last_flag,,#{window-status-separator}},#[range=window|#{window_index} list=focus #{?#{!=:#{E:window-status-current-style},default},#{E:window-status-current-style},#{E:window-status-style}}]#{T:window-status-current-format}#[norange list=on default]#{?loop_last_flag,,#{window-status-separator}}}#[nolist align=right]#{T:status-right}"
+    tmux set-option -g "status-format[0]" ""
   fi
 }
 
